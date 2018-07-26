@@ -18,7 +18,7 @@
                 <div class="form-group">
                   <label for="">Name</label>
                   <input type="text" class="form-control" v-model="record">
-                  <span v-if="error.name"> {{error.name}} </span>
+                  <span v-if="errors.name" class="text-danger font-weight-bold"> {{errors.name[0]}} </span>
                 </div>
                 
             </div>
@@ -39,7 +39,8 @@ export default {
     return {
       record: "",
       error: "",
-      success: ""
+      success: "",
+      errors: {}
     };
   },
   methods: {
@@ -56,8 +57,8 @@ export default {
           document.getElementById("modelId").modal("{ show: false }");
         })
         .catch(err => {
-          console.log(err.data);
-          // this.error = err.data.responseJSON.data;
+          console.log(err.response.data.errors);
+          this.errors = err.response.data.errors;
         });
     }
   }

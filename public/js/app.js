@@ -50263,7 +50263,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       record: "",
       error: "",
-      success: ""
+      success: "",
+      errors: {}
     };
   },
 
@@ -50280,8 +50281,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this.success = "Task Added Successfully...";
         document.getElementById("modelId").modal("{ show: false }");
       }).catch(function (err) {
-        console.log(err.data);
-        // this.error = err.data.responseJSON.data;
+        console.log(err.response.data.errors);
+        _this.errors = err.response.data.errors;
       });
     }
   }
@@ -50346,8 +50347,10 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _vm.error.name
-                ? _c("span", [_vm._v(" " + _vm._s(_vm.error.name) + " ")])
+              _vm.errors.name
+                ? _c("span", { staticClass: "text-danger font-weight-bold" }, [
+                    _vm._v(" " + _vm._s(_vm.errors.name[0]) + " ")
+                  ])
                 : _vm._e()
             ])
           ]),
