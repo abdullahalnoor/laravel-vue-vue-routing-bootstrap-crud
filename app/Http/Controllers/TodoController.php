@@ -14,7 +14,8 @@ class TodoController extends Controller
      */
     public function index()
     {
-        $tasks = Todo::all();
+        $tasks = Todo::paginate(2);
+        // return $tasks;
         return request()->json(15,$tasks);
     }
 
@@ -36,6 +37,9 @@ class TodoController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'name' => 'required',
+        ]);
         // return $request->all();
         $tasks = Todo::create($request->all());
         // $tasks = new Todo();

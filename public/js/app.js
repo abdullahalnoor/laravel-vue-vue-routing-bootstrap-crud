@@ -50118,6 +50118,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var AddModal = __webpack_require__(46);
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -50127,22 +50141,55 @@ var AddModal = __webpack_require__(46);
   data: function data() {
     return {
       tasks: {},
-      data: ""
+      data: "",
+      pagination: {}
     };
   },
   created: function created() {
-    var _this = this;
-
-    var url = "http://localhost/vlp-3/public/task/";
-    // var url = "http://127.0.0.1:8000/task"
-    axios.get(url).then(function (res) {
-      return _this.tasks = res.data;
-    }).catch(function (err) {
-      return console.log(err);
-    });
+    this.fetchData();
+    // var url = "http://localhost/vlp-3/public/task/";
+    // // var url = "http://127.0.0.1:8000/task"
+    // let vm = this;
+    // axios
+    //   .get(url)
+    //   .then(res => {
+    //     this.tasks = res.data.data;
+    //     // console.log(res.data.data);
+    //     // var data = res.data;
+    //     console.log(res.data);
+    //     vm.makePagination(res.meta, res.links);
+    //   })
+    //   .catch(err => console.log(err));
   },
 
   methods: {
+    fetchData: function fetchData(page_url) {
+      var _this = this;
+
+      var page_url = page_url || "http://localhost/vlp-3/public/task/";
+      // var url = "http://127.0.0.1:8000/task"
+      var vm = this;
+      axios.get(page_url).then(function (res) {
+        _this.tasks = res.data.data;
+        // console.log(res.data.data);
+        // var data = res.data;
+        console.log(res.data.next);
+        vm.makePagination(res.data);
+      }).catch(function (err) {
+        return console.log(err);
+      });
+    },
+    makePagination: function makePagination(data) {
+      var pagination = {
+        current_page: data.current_page,
+        last_page: data.last_page,
+        last_page_url: data.last_page_url,
+        next_page_url: data.next_page_url,
+        prev_page_url: data.prev_page_url,
+        first_page_url: data.first_page_url
+      };
+      this.pagination = pagination;
+    },
     refreshData: function refreshData(data) {
       this.tasks = data.data;
     }
@@ -50235,11 +50282,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      record: ""
+      record: "",
+      error: "",
+      success: ""
     };
   },
 
@@ -50253,8 +50304,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         _this.record = "";
         // this.$parent.tasks = res.data;
         _this.$emit("recordAdded", res);
+        _this.success = "Task Added Successfully...";
+        document.getElementById("modelId").modal("{ show: false }");
       }).catch(function (err) {
-        return console.log(err.data);
+        console.log(err.data);
+        // this.error = err.data.responseJSON.data;
       });
     }
   }
@@ -50286,6 +50340,14 @@ var render = function() {
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "modal-body" }, [
+            _vm.success.length > 0
+              ? _c(
+                  "p",
+                  { staticClass: "text-success font-weight-bold text-center" },
+                  [_vm._v(_vm._s(_vm.success))]
+                )
+              : _vm._e(),
+            _vm._v(" "),
             _c("div", { staticClass: "form-group" }, [
               _c("label", { attrs: { for: "" } }, [_vm._v("Name")]),
               _vm._v(" "),
@@ -50309,7 +50371,11 @@ var render = function() {
                     _vm.record = $event.target.value
                   }
                 }
-              })
+              }),
+              _vm._v(" "),
+              _vm.error.name
+                ? _c("span", [_vm._v(" " + _vm._s(_vm.error.name) + " ")])
+                : _vm._e()
             ])
           ]),
           _vm._v(" "),
@@ -50394,11 +50460,13 @@ var render = function() {
               _vm._l(_vm.tasks, function(item, index) {
                 return _c("li", { key: index }, [
                   _vm._v(
-                    "\n         " +
+                    "\n           " +
                       _vm._s(index + 1) +
+                      "- " +
+                      _vm._s(item.id) +
                       " -" +
                       _vm._s(item.name) +
-                      "\n        "
+                      "\n          "
                   )
                 ])
               })
@@ -50406,7 +50474,99 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-footer border-info" }, [
-            _vm._v("\n      Footer\n    ")
+            _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
+              _c("ul", { staticClass: "pagination" }, [
+                _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.fetchData(_vm.pagination.first_page_url)
+                        }
+                      }
+                    },
+                    [_vm._v("First")]
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    staticClass: "page-item",
+                    class: [{ disabled: !_vm.pagination.prev_page_url }]
+                  },
+                  [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "page-link",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            _vm.fetchData(_vm.pagination.prev_page_url)
+                          }
+                        }
+                      },
+                      [_vm._v("Previous")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("li", { staticClass: "page-item" }, [
+                  _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
+                    _vm._v(
+                      "\n    Page " +
+                        _vm._s(_vm.pagination.current_page) +
+                        " of " +
+                        _vm._s(_vm.pagination.last_page) +
+                        " \n    "
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "li",
+                  {
+                    staticClass: "page-item",
+                    class: [{ disabled: !_vm.pagination.next_page_url }]
+                  },
+                  [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "page-link",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            _vm.fetchData(_vm.pagination.next_page_url)
+                          }
+                        }
+                      },
+                      [_vm._v("Next")]
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c("li", { staticClass: "page-item" }, [
+                  _c(
+                    "a",
+                    {
+                      staticClass: "page-link",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          _vm.fetchData(_vm.pagination.last_page_url)
+                        }
+                      }
+                    },
+                    [_vm._v("Last")]
+                  )
+                ])
+              ])
+            ])
           ])
         ])
       ]),
@@ -50422,7 +50582,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header bg-info text-white" }, [
-      _vm._v("\n      Header "),
+      _vm._v("\n        Header "),
       _c(
         "a",
         {
