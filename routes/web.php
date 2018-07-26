@@ -17,3 +17,5 @@ Route::get('/', function () {
 
 Route::resource('task','TodoController');
 Route::post('store','TodoController@store');
+Route::put('update','TodoController@update');
+Route::get('edit/{id}','TodoController@edit');

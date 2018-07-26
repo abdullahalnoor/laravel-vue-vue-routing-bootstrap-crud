@@ -50119,18 +50119,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 var AddModal = __webpack_require__(46);
 Vue.component("pagination", __webpack_require__(55));
+var EditModal = __webpack_require__(56);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    "add-modal": AddModal
+    "add-modal": AddModal,
+    "edit-modal": EditModal
   },
   data: function data() {
     return {
       tasks: {},
-      data: ""
+      data: "",
+      editRecordData: {}
       // pagination: {}
     };
   },
@@ -50165,6 +50195,14 @@ Vue.component("pagination", __webpack_require__(55));
     },
     refreshData: function refreshData(data) {
       this.tasks = data.data;
+    },
+    editRecord: function editRecord(id) {
+      var _this3 = this;
+
+      // console.log(id);
+      axios.get("http://localhost/vlp-3/public/edit/" + id).then(function (res) {
+        return _this3.editRecordData = res.data;
+      });
     }
   }
 });
@@ -50430,38 +50468,74 @@ var render = function() {
         _c("div", { staticClass: "card border-info" }, [
           _vm._m(0),
           _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c(
-              "ul",
-              _vm._l(_vm.tasks.data, function(item, index) {
-                return _c("li", { key: index }, [
-                  _vm._v(
-                    "\n         " +
-                      _vm._s(index + 1) +
-                      "- -" +
-                      _vm._s(item.name) +
-                      "\n        "
-                  )
+          _c("div", { staticClass: "card-body full-width" }, [
+            _c("table", { staticClass: "table table-responsive" }, [
+              _vm._m(1),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.tasks.data, function(item, index) {
+                  return _c("tr", { key: index }, [
+                    _c("td", [_vm._v(_vm._s(index + 1))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(" " + _vm._s(item.name))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-info",
+                          attrs: {
+                            href: "",
+                            "data-toggle": "modal",
+                            "data-target": "#editModal"
+                          },
+                          on: {
+                            click: function($event) {
+                              _vm.editRecord(item.id)
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "glyphicon glyphicon-edit" }),
+                          _vm._v(" Edit")
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm._m(2, true)
+                    ])
+                  ])
+                })
+              ),
+              _vm._v(" "),
+              _c("tfoot", [
+                _c("tr", { staticClass: "text-center" }, [
+                  _c("td", { attrs: { colspan: "3" } }, [
+                    _c(
+                      "div",
+                      { staticClass: "row justify-content-center" },
+                      [
+                        _c("pagination", {
+                          attrs: { data: _vm.tasks },
+                          on: { "pagination-change-page": _vm.getResults }
+                        })
+                      ],
+                      1
+                    )
+                  ])
                 ])
-              })
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "card-footer border-info" },
-            [
-              _c("pagination", {
-                attrs: { data: _vm.tasks },
-                on: { "pagination-change-page": _vm.getResults }
-              })
-            ],
-            1
-          )
+              ])
+            ])
+          ])
         ])
       ]),
       _vm._v(" "),
-      _c("add-modal", { on: { recordAdded: _vm.refreshData } })
+      _c("add-modal", { on: { recordAdded: _vm.refreshData } }),
+      _vm._v(" "),
+      _c("edit-modal", {
+        attrs: { editRec: _vm.editRecordData },
+        on: { recordUpdated: _vm.refreshData }
+      })
     ],
     1
   )
@@ -50472,7 +50546,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header bg-info text-white" }, [
-      _vm._v("\n      Header "),
+      _vm._v("\n        Header\n        "),
       _c(
         "a",
         {
@@ -50481,6 +50555,29 @@ var staticRenderFns = [
         },
         [_vm._v("+")]
       )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("#")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Action")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { staticClass: "btn btn-danger ", attrs: { href: "" } }, [
+      _c("i", { staticClass: "glyphicon glyphicon-trash" }),
+      _vm._v(" Delete")
     ])
   }
 ]
@@ -50602,6 +50699,220 @@ module.exports = {
 	}
 };
 
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(58)
+/* template */
+var __vue_template__ = __webpack_require__(57)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\EditModal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-795573dc", Component.options)
+  } else {
+    hotAPI.reload("data-v-795573dc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "modal fade",
+      attrs: {
+        id: "editModal",
+        tabindex: "-1",
+        role: "dialog",
+        "aria-labelledby": "modelTitleId",
+        "aria-hidden": "true"
+      }
+    },
+    [
+      _c("div", { staticClass: "modal-dialog", attrs: { role: "document" } }, [
+        _c("div", { staticClass: "modal-content" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-body" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Name")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.editRec.name,
+                    expression: "editRec.name"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "text" },
+                domProps: { value: _vm.editRec.name },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.editRec, "name", $event.target.value)
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "modal-footer" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-secondary",
+                attrs: { type: "button", "data-dismiss": "modal" }
+              },
+              [_vm._v("Close")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-primary",
+                attrs: { type: "button" },
+                on: { click: _vm.updateData }
+              },
+              [_vm._v("Update")]
+            )
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title", attrs: { id: "modelTitleId" } }, [
+        _vm._v("Modal title")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-795573dc", module.exports)
+  }
+}
+
+/***/ }),
+/* 58 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["editRec"],
+  methods: {
+    updateData: function updateData() {
+      var _this = this;
+
+      axios.post("http://localhost/vlp-3/public/task/" + this.editRec.id, {
+        name: this.editRec.name,
+        id: this.editRec.id,
+        _method: "PUT"
+      }).then(function (data) {
+        // console.log(data.data);
+        _this.$emit("recordUpdated", data);
+        // this.tasks = response.data;
+        // console.log(response.data);
+      });
+    }
+  }
+});
 
 /***/ })
 /******/ ]);
