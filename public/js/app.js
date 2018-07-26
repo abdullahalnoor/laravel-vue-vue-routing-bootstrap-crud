@@ -50119,21 +50119,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 var AddModal = __webpack_require__(46);
+Vue.component("pagination", __webpack_require__(55));
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     "add-modal": AddModal
@@ -50141,54 +50130,38 @@ var AddModal = __webpack_require__(46);
   data: function data() {
     return {
       tasks: {},
-      data: "",
-      pagination: {}
+      data: ""
+      // pagination: {}
     };
   },
   created: function created() {
-    this.fetchData();
-    // var url = "http://localhost/vlp-3/public/task/";
-    // // var url = "http://127.0.0.1:8000/task"
-    // let vm = this;
-    // axios
-    //   .get(url)
-    //   .then(res => {
-    //     this.tasks = res.data.data;
-    //     // console.log(res.data.data);
-    //     // var data = res.data;
-    //     console.log(res.data);
-    //     vm.makePagination(res.meta, res.links);
-    //   })
-    //   .catch(err => console.log(err));
+    var _this = this;
+
+    // this.fetchData();
+    var url = "http://localhost/vlp-3/public/task/";
+    // var url = "http://127.0.0.1:8000/task"
+    var vm = this;
+    axios.get(url).then(function (res) {
+      _this.tasks = res.data;
+      // console.log(res.data.data);
+      // var data = res.data;
+      // console.log(res.data);
+      // vm.makePagination(res.meta, res.links);
+    }).catch(function (err) {
+      return console.log(err);
+    });
   },
 
   methods: {
-    fetchData: function fetchData(page_url) {
-      var _this = this;
+    getResults: function getResults() {
+      var _this2 = this;
 
-      var page_url = page_url || "http://localhost/vlp-3/public/task/";
-      // var url = "http://127.0.0.1:8000/task"
-      var vm = this;
-      axios.get(page_url).then(function (res) {
-        _this.tasks = res.data.data;
-        // console.log(res.data.data);
-        // var data = res.data;
-        console.log(res.data.next);
-        vm.makePagination(res.data);
-      }).catch(function (err) {
-        return console.log(err);
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+
+      axios.get("http://localhost/vlp-3/public/task?page=" + page).then(function (response) {
+        _this2.tasks = response.data;
+        // console.log(response.data);
       });
-    },
-    makePagination: function makePagination(data) {
-      var pagination = {
-        current_page: data.current_page,
-        last_page: data.last_page,
-        last_page_url: data.last_page_url,
-        next_page_url: data.next_page_url,
-        prev_page_url: data.prev_page_url,
-        first_page_url: data.first_page_url
-      };
-      this.pagination = pagination;
     },
     refreshData: function refreshData(data) {
       this.tasks = data.data;
@@ -50457,117 +50430,31 @@ var render = function() {
           _c("div", { staticClass: "card-body" }, [
             _c(
               "ul",
-              _vm._l(_vm.tasks, function(item, index) {
+              _vm._l(_vm.tasks.data, function(item, index) {
                 return _c("li", { key: index }, [
                   _vm._v(
-                    "\n           " +
+                    "\n         " +
                       _vm._s(index + 1) +
-                      "- " +
-                      _vm._s(item.id) +
-                      " -" +
+                      "- -" +
                       _vm._s(item.name) +
-                      "\n          "
+                      "\n        "
                   )
                 ])
               })
             )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "card-footer border-info" }, [
-            _c("nav", { attrs: { "aria-label": "Page navigation example" } }, [
-              _c("ul", { staticClass: "pagination" }, [
-                _c("li", { staticClass: "page-item" }, [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "page-link",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          _vm.fetchData(_vm.pagination.first_page_url)
-                        }
-                      }
-                    },
-                    [_vm._v("First")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c(
-                  "li",
-                  {
-                    staticClass: "page-item",
-                    class: [{ disabled: !_vm.pagination.prev_page_url }]
-                  },
-                  [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "page-link",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            _vm.fetchData(_vm.pagination.prev_page_url)
-                          }
-                        }
-                      },
-                      [_vm._v("Previous")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("li", { staticClass: "page-item" }, [
-                  _c("a", { staticClass: "page-link", attrs: { href: "#" } }, [
-                    _vm._v(
-                      "\n    Page " +
-                        _vm._s(_vm.pagination.current_page) +
-                        " of " +
-                        _vm._s(_vm.pagination.last_page) +
-                        " \n    "
-                    )
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "li",
-                  {
-                    staticClass: "page-item",
-                    class: [{ disabled: !_vm.pagination.next_page_url }]
-                  },
-                  [
-                    _c(
-                      "a",
-                      {
-                        staticClass: "page-link",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            _vm.fetchData(_vm.pagination.next_page_url)
-                          }
-                        }
-                      },
-                      [_vm._v("Next")]
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c("li", { staticClass: "page-item" }, [
-                  _c(
-                    "a",
-                    {
-                      staticClass: "page-link",
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          _vm.fetchData(_vm.pagination.last_page_url)
-                        }
-                      }
-                    },
-                    [_vm._v("Last")]
-                  )
-                ])
-              ])
-            ])
-          ])
+          _c(
+            "div",
+            { staticClass: "card-footer border-info" },
+            [
+              _c("pagination", {
+                attrs: { data: _vm.tasks },
+                on: { "pagination-change-page": _vm.getResults }
+              })
+            ],
+            1
+          )
         ])
       ]),
       _vm._v(" "),
@@ -50582,7 +50469,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header bg-info text-white" }, [
-      _vm._v("\n        Header "),
+      _vm._v("\n      Header "),
       _c(
         "a",
         {
@@ -50608,6 +50495,110 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 51 */,
+/* 52 */,
+/* 53 */,
+/* 54 */,
+/* 55 */
+/***/ (function(module, exports) {
+
+module.exports = {
+	props: {
+		data: {
+			type: Object,
+			default: function() {
+				return {
+					current_page: 1,
+					data: [],
+					from: 1,
+					last_page: 1,
+					next_page_url: null,
+					per_page: 10,
+					prev_page_url: null,
+					to: 1,
+					total: 0,
+				}
+			}
+		},
+		limit: {
+			type: Number,
+			default: 0
+		}
+	},
+
+	template: '<ul class="pagination" v-if="data.total > data.per_page">\
+		<li class="page-item pagination-prev-nav" v-if="data.prev_page_url">\
+			<a class="page-link" href="#" aria-label="Previous" @click.prevent="selectPage(--data.current_page)">\
+				<slot name="prev-nav">\
+					<span aria-hidden="true">&laquo;</span>\
+					<span class="sr-only">Previous</span>\
+				</slot>\
+			</a>\
+		</li>\
+		<li class="page-item pagination-page-nav" v-for="n in getPages()" :class="{ \'active\': n == data.current_page }">\
+			<a class="page-link" href="#" @click.prevent="selectPage(n)">{{ n }}</a>\
+		</li>\
+		<li class="page-item pagination-next-nav" v-if="data.next_page_url">\
+			<a class="page-link" href="#" aria-label="Next" @click.prevent="selectPage(++data.current_page)">\
+				<slot name="next-nav">\
+					<span aria-hidden="true">&raquo;</span>\
+					<span class="sr-only">Next</span>\
+				</slot>\
+			</a>\
+		</li>\
+	</ul>',
+
+	methods: {
+		selectPage: function(page) {
+			if (page === '...') {
+				return;
+			}
+
+			this.$emit('pagination-change-page', page);
+		},
+		getPages: function() {
+			if (this.limit === -1) {
+				return 0;
+			}
+
+			if (this.limit === 0) {
+				return this.data.last_page;
+			}
+
+			var current = this.data.current_page,
+				last = this.data.last_page,
+				delta = this.limit,
+				left = current - delta,
+				right = current + delta + 1,
+				range = [],
+				pages = [],
+				l;
+
+			for (var i = 1; i <= last; i++) {
+				if (i == 1 || i == last || (i >= left && i < right)) {
+					range.push(i);
+				}
+			}
+
+			range.forEach(function (i) {
+				if (l) {
+					if (i - l === 2) {
+						pages.push(l + 1);
+					} else if (i - l !== 1) {
+						pages.push('...');
+					}
+				}
+				pages.push(i);
+				l = i;
+			});
+
+			return pages;
+		}
+	}
+};
+
 
 /***/ })
 /******/ ]);
