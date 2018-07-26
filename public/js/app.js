@@ -50203,6 +50203,13 @@ var EditModal = __webpack_require__(56);
       axios.get("http://localhost/vlp-3/public/edit/" + id).then(function (res) {
         return _this3.editRecordData = res.data;
       });
+    },
+    delRecord: function delRecord(id) {
+      var _this4 = this;
+
+      axios.get("http://localhost/vlp-3/public/del/" + id).then(function (res) {
+        _this4.tasks = res.data;
+      });
     }
   }
 });
@@ -50502,7 +50509,22 @@ var render = function() {
                         ]
                       ),
                       _vm._v(" "),
-                      _vm._m(2, true)
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-danger ",
+                          attrs: { href: "" },
+                          on: {
+                            click: function($event) {
+                              _vm.delRecord(item.id)
+                            }
+                          }
+                        },
+                        [
+                          _c("i", { staticClass: "glyphicon glyphicon-trash" }),
+                          _vm._v(" Delete")
+                        ]
+                      )
                     ])
                   ])
                 })
@@ -50569,15 +50591,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Action")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("a", { staticClass: "btn btn-danger ", attrs: { href: "" } }, [
-      _c("i", { staticClass: "glyphicon glyphicon-trash" }),
-      _vm._v(" Delete")
     ])
   }
 ]

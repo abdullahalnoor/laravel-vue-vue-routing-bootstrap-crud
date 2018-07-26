@@ -19,3 +19,4 @@ Route::resource('task','TodoController');
 Route::post('store','TodoController@store');
 Route::put('update','TodoController@update');
 Route::get('edit/{id}','TodoController@edit');
+Route::get('del/{id}','TodoController@del');

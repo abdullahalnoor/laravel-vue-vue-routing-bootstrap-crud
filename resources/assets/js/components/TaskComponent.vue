@@ -22,8 +22,8 @@
                 <td>
                   <a href="" class="btn btn-info" @click="editRecord(item.id)"  data-toggle="modal" data-target="#editModal">
                     <i class="glyphicon glyphicon-edit"></i> Edit</a>
-                  <a href="" class="btn btn-danger ">
-                    <i class="glyphicon glyphicon-trash"></i> Delete</a>
+                  <a href="" class="btn btn-danger " @click="delRecord(item.id)">
+                    <i class="glyphicon glyphicon-trash" ></i> Delete</a>
                 </td>
 
               </tr>
@@ -101,6 +101,11 @@ export default {
       axios
         .get("http://localhost/vlp-3/public/edit/" + id)
         .then(res => (this.editRecordData = res.data));
+    },
+    delRecord(id) {
+      axios.get(`http://localhost/vlp-3/public/del/${id}`).then(res => {
+        this.tasks = res.data;
+      });
     }
   }
 };
